@@ -1,6 +1,7 @@
 // const {createStore} = require('redux');
 
-const { createStore, combineReducers } = require("redux");
+const { createStore, combineReducers, applyMiddleware } = require("redux");
+const { default: logger } = require("redux-logger");
 
 // // defining constent
 // const INCREMENT = "INCREMENT";
@@ -114,19 +115,19 @@ const GET_PRODUCTS = "GET_PRODUCTS";
 const ADD_PRODUCT = "ADD_PRODUCT";
 
 // cart constant
-const GET_CART_ITEMS = "GET_CART_ITEMS";
-const ADD_CART_ITEM = "ADD_CART_ITEM";
+// const GET_CART_ITEMS = "GET_CART_ITEMS";
+// const ADD_CART_ITEM = "ADD_CART_ITEM";
 
 // product states
 const intialProductState = {
   product: ["sabbir", "shohag"],
   numberOfProduct: 2,
-};
-// cart states
-const intialCartState = {
-  cart: ["bike"],
-  numberOfProduct: 1,
-};
+}; 
+// // cart states
+// const intialCartState = {
+//   cart: ["bike"],
+//   numberOfProduct: 1,
+// };
 
 // product actions
 const getProducts = () => {
@@ -140,18 +141,19 @@ const addProduct = (product) => {
     payload: product,
   };
 };
-// cart actions
-const getCarts = () => {
-  return {
-    type: GET_CART_ITEMS,
-  };
-};
-const addCart = (cart) => {
-  return {
-    type: ADD_CART_ITEM,
-    payload: cart,
-  };
-};
+
+// // cart actions
+// const getCarts = () => {
+//   return {
+//     type: GET_CART_ITEMS,
+//   };
+// };
+// const addCart = (cart) => {
+//   return {
+//     type: ADD_CART_ITEM,
+//     payload: cart,
+//   };
+// };
 
 // productReducer
 const productReducer = (state = intialProductState, action) => {
@@ -171,29 +173,29 @@ const productReducer = (state = intialProductState, action) => {
   }
 };
 
-// cartReducer
-const cartReducer = (state = intialCartState, action) => {
-  switch (action.type) {
-    case GET_CART_ITEMS:
-      return {
-        ...state,
-      };
-    case ADD_CART_ITEM:
-      return {
-        carts: [...state.cart, action.payload],
-        numberOfProduct: state.numberOfProduct + 1,
-      };
+// // cartReducer
+// const cartReducer = (state = intialCartState, action) => {
+//   switch (action.type) {
+//     case GET_CART_ITEMS:
+//       return {
+//         ...state,
+//       };
+//     case ADD_CART_ITEM:
+//       return {
+//         carts: [...state.cart, action.payload],
+//         numberOfProduct: state.numberOfProduct + 1,
+//       };
 
-    default:
-      return state;
-  }
-};
+//     default:
+//       return state;
+//   }
+// };
 
-// root reducer
-const rootReducer = combineReducers({
-  productR: productReducer,
-  cartR: cartReducer,
-});
+// multyple reducer
+// const rootReducer = combineReducers({
+//   productR: productReducer,
+//   cartR: cartReducer,
+// });
 
 // store for products
 // const store = createStore(productReducer);
@@ -202,15 +204,15 @@ const rootReducer = combineReducers({
 // })
 
 // store for carts
-const store = createStore(rootReducer);
+const store = createStore(productReducer, applyMiddleware(logger));
 store.subscribe(() => {
   console.log(store.getState());
 });
 
 // product show
-// store.dispatch(getProducts())
-// store.dispatch(addProduct("moon"))
+store.dispatch(getProducts())
+store.dispatch(addProduct("moon"))
 
-// cart show
-store.dispatch(getCarts());
-store.dispatch(addCart("car"));
+// // cart show
+// store.dispatch(getCarts());
+// store.dispatch(addCart("car"));
